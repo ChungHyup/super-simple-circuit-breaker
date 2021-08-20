@@ -1,5 +1,5 @@
 {
-  "name": "simple-circuit-breaker",
+  "name": "super-simple-circuit-breaker",
   "version": "0.1.0",
   "description": "Super Simple Circuit Breaker",
   "main": "index.js",
