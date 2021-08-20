@@ -1,15 +1,34 @@
 {
   "name": "simple-circuit-breaker",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "Super Simple Circuit Breaker",
   "main": "index.js",
   "scripts": {
     "test": "mocha --timeout 10000"
   },
-  "author": "",
-  "license": "ISC",
+  "author": {
+    "name": "Chunghyup OH",
+    "email": "chunghyup.oh@gmail.com"
+  },
+    "license": "ISC",
   "devDependencies": {
     "chai": "^4.3.4",
     "mocha": "^9.0.3"
-  }
+  },
+  "keywords": [
+    "circuit",
+    "circuit-breaker",
+    "simple-circuit-breaker"
+  ],
+  "homepage": "https://github.com/ChungHyup/simple-circuit-breaker",
+  "bugs": {
+    "url": "https://github.com/ChungHyup/simple-circuit-breaker/issues",
+    "email": "chunghyup.oh@gmail.com"
+  },
+  "licenses": [
+    {
+      "type": "Apache-2.0",
+      "url": "https://opensource.org/licenses/apache2.0.php"
+    }
+  ]
 }
