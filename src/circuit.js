@@ -1,3 +1,5 @@
-class CircuitBreaker {
-  
+class SimpleCircuitBreaker {
+
 }
+
+module.exports = exports = SimpleCircuitBreaker;
