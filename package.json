@@ -18,11 +18,13 @@
   "keywords": [
     "circuit",
     "circuit-breaker",
-    "simple-circuit-breaker"
+    "simple-circuit-breaker",
+    "super-simple-circuit-breaker",
+    "circuit breaker"
   ],
-  "homepage": "https://github.com/ChungHyup/simple-circuit-breaker",
+  "homepage": "https://github.com/ChungHyup/super-simple-circuit-breaker",
   "bugs": {
-    "url": "https://github.com/ChungHyup/simple-circuit-breaker/issues",
+    "url": "https://github.com/ChungHyup/super-simple-circuit-breaker/issues",
     "email": "chunghyup.oh@gmail.com"
   },
   "licenses": [

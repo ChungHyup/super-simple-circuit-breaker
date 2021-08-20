@@ -1,7 +1,13 @@
-# Simple circuit breaker
+# Super Simple circuit breaker
 
-Simple circuit breaker
+Super Simple circuit breaker
 
+
+## Installation
+
+```
+npm install super-simple-circuit-breaker
+```
 
 ## Usage
 ---
