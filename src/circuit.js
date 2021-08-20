@@ -10,12 +10,21 @@ const CIRCUIT_STATUS = {
 class SimpleCircuitBreaker {
 
   constructor() {
-    this[STATUS] = CIRCUIT_STATUS.OPEN
+    this[STATUS] = CIRCUIT_STATUS.CLOSED
   }
 
   getCurrentStatus() {
     return this[STATUS]
   }
+
+  run = (func) => {
+    try {
+      func();
+    } catch (err) {
+      this[STATUS] = CIRCUIT_STATUS.OPEN
+    }
+  }
+  
 }
 
 module.exports = exports = SimpleCircuitBreaker;
