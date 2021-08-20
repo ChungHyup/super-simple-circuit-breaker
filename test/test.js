@@ -1,5 +1,7 @@
 var assert = require("assert")
 var expect = require("chai").expect
+var should = require("chai").should
+
 var SimpleCircuitBreaker = require('../index')
 
 describe('Circuit', function() {
@@ -13,19 +15,33 @@ describe('Circuit', function() {
       expect(circuit.getCurrentStatus()).to.equal(2)
     });
 
-    it('Can Call Success Function',function() {
-      circuit.run(() => {
-        console.log("success function")
-      })
+    it('Can not call Not an async Function',async function() {
+      try {
+        const response = await circuit.run(() => {})
+        expect(response).to.be.null
+      } catch(err) {
+        expect(err).to.not.be.null
+        expect(circuit.getCurrentStatus()).to.equal(2)
+      }
+    });
+
+    it('Can Call Success Async Function',function() {
+      circuit.run(async () => {})
       expect(circuit.getCurrentStatus()).to.equal(2)
     });
 
-    it('Can Call Fail Function and status shloud be changed',function() {
-      circuit.run(() => {
-        throw new Error("Fail!!")
-      })
-      expect(circuit.getCurrentStatus()).to.equal(0)
+    it('Can Call Fail Function and status shloud be changed',async function() {
+      try {
+        const response = await circuit.run(async () => {
+          throw new Error("Fail!!")
+        })
+        expect(response).to.be.null
+      } catch (err) {
+        expect(err).to.not.be.null
+        expect(circuit.getCurrentStatus()).to.equal(0)
+      }
+      
+      
     });
-
   });
 });

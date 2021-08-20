@@ -17,14 +17,23 @@ class SimpleCircuitBreaker {
     return this[STATUS]
   }
 
-  run = (func) => {
-    try {
-      func();
-    } catch (err) {
-      this[STATUS] = CIRCUIT_STATUS.OPEN
-    }
+  run = async (func) => {
+    return new Promise(async (resolve, reject) => {
+      const isAsync = func.constructor.name === "AsyncFunction";
+      if(!isAsync) {
+        return reject(new Error('Function must be async function'))
+      }
+      try {
+        const result = await func();
+        resolve(result);
+      } catch (err) {
+        this[STATUS] = CIRCUIT_STATUS.OPEN
+        reject(err);
+      }
+    })
+    
   }
-  
+
 }
 
 module.exports = exports = SimpleCircuitBreaker;
