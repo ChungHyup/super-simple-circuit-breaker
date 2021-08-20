@@ -1,5 +1,7 @@
 
 const STATUS = Symbol('status');
+const OPTIONS = Symbol('options');
+const FAILED_COUNT = Symbol('failed_count');
 
 const CIRCUIT_STATUS = {
   OPEN: 0,
@@ -7,10 +9,20 @@ const CIRCUIT_STATUS = {
   CLOSED: 2
 }
 
+/**
+ * 
+ */
 class SimpleCircuitBreaker {
 
-  constructor() {
+  /**
+   * 
+   * @param {Object} options 
+   * @param {number} options.retry number of retry count
+   */
+  constructor(options) {
     this[STATUS] = CIRCUIT_STATUS.CLOSED
+    this[OPTIONS] = options
+    this[FAILED_COUNT] = 0
   }
 
   getCurrentStatus() {
@@ -27,13 +39,18 @@ class SimpleCircuitBreaker {
         const result = await func();
         resolve(result);
       } catch (err) {
-        this[STATUS] = CIRCUIT_STATUS.OPEN
+        this.handleFail();
         reject(err);
       }
     })
-    
   }
 
+  handleFail = () => {
+    this[FAILED_COUNT]++;
+    if (this[FAILED_COUNT] >= 3) {
+      this[STATUS] = CIRCUIT_STATUS.OPEN
+    }
+  }
 }
 
 module.exports = exports = SimpleCircuitBreaker;

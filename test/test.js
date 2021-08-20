@@ -6,7 +6,9 @@ var SimpleCircuitBreaker = require('../index')
 
 describe('Circuit', function() {
   describe('Create', function() {
-    const circuit = new SimpleCircuitBreaker();
+    const circuit = new SimpleCircuitBreaker({
+      retry: 3
+    });
     it('Create Circuit Breaker instance', function() {
       expect(circuit).to.be.a('object')
     });
@@ -30,7 +32,25 @@ describe('Circuit', function() {
       expect(circuit.getCurrentStatus()).to.equal(2)
     });
 
-    it('Can Call Fail Function and status shloud be changed',async function() {
+    it('Can Call Fail Function and status shloud not be changed until 3 times fail',async function() {
+      try {
+        const response = await circuit.run(async () => {
+          throw new Error("Fail!!")
+        })
+        expect(response).to.be.null
+      } catch (err) {
+        expect(err).to.not.be.null
+        expect(circuit.getCurrentStatus()).to.equal(2)
+      }
+      try {
+        const response = await circuit.run(async () => {
+          throw new Error("Fail!!")
+        })
+        expect(response).to.be.null
+      } catch (err) {
+        expect(err).to.not.be.null
+        expect(circuit.getCurrentStatus()).to.equal(2)
+      }
       try {
         const response = await circuit.run(async () => {
           throw new Error("Fail!!")
@@ -40,8 +60,6 @@ describe('Circuit', function() {
         expect(err).to.not.be.null
         expect(circuit.getCurrentStatus()).to.equal(0)
       }
-      
-      
     });
   });
 });
