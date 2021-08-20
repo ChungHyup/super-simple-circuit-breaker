@@ -4,35 +4,46 @@ var should = require("chai").should
 
 var SimpleCircuitBreaker = require('../index')
 
-describe('Circuit', function() {
-  describe('Create', function() {
+const RETRY = 3;
+const HALFOPENTIMEOUT = 1000;
+
+function delay(interval) {
+  return it('should delay', done => {
+    setTimeout(() => done(), interval)
+
+  }).timeout(interval + 100) // The extra 100ms should guarantee the test will not fail due to exceeded timeout
+}
+
+describe('Circuit', function () {
+  describe('Create', function () {
     const circuit = new SimpleCircuitBreaker({
-      retry: 3
+      retry: RETRY,
+      halfopenTime: HALFOPENTIMEOUT
     });
-    it('Create Circuit Breaker instance', function() {
+    it('Create Circuit Breaker instance', function () {
       expect(circuit).to.be.a('object')
     });
 
-    it('Default Status Shoud be OPEN', function() {
+    it('Default Status Shoud be OPEN', function () {
       expect(circuit.getCurrentStatus()).to.equal(2)
     });
 
-    it('Can not call Not an async Function',async function() {
+    it('Can not call Not an async Function', async function () {
       try {
-        const response = await circuit.run(() => {})
+        const response = await circuit.run(() => { })
         expect(response).to.be.null
-      } catch(err) {
+      } catch (err) {
         expect(err).to.not.be.null
         expect(circuit.getCurrentStatus()).to.equal(2)
       }
     });
 
-    it('Can Call Success Async Function',function() {
-      circuit.run(async () => {})
+    it('Can Call Success Async Function', async function () {
+      await circuit.run(async () => { })
       expect(circuit.getCurrentStatus()).to.equal(2)
     });
 
-    it('Can Call Fail Function and status shloud not be changed until 3 times fail',async function() {
+    it('Can Call Fail Function and status shloud not be changed until 3 times fail', async function () {
       try {
         const response = await circuit.run(async () => {
           throw new Error("Fail!!")
@@ -61,5 +72,28 @@ describe('Circuit', function() {
         expect(circuit.getCurrentStatus()).to.equal(0)
       }
     });
+
+    it('Can Not Call Success Async Function when circuit opened', async function () {
+      try {
+        const response = await circuit.run(async () => { })
+        expect(response).to.be.null
+      } catch (err) {
+        expect(err).to.not.be.null
+        expect(circuit.getCurrentStatus()).to.equal(0)
+      }
+    });
+
+    delay(HALFOPENTIMEOUT)
+
+    it('Circuit status shuld be HALFOPEN', async function () {
+      expect(circuit.getCurrentStatus()).to.equal(1)
+    });
+
+    it('Can Call Success Async Function', async function () {
+      await circuit.run(async () => { })
+      expect(circuit.getCurrentStatus()).to.equal(2)
+    });
+
+
   });
 });
