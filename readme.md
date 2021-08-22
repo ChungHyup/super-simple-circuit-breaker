@@ -20,7 +20,14 @@ const options = {
     halfopenTime: 1000
 }
 const authServerCB = new SimpleCircuitBreaker(options);
-const response = authserverCB.run(async () => {
-    const response = await callMyApi();
-    return Promise.resolve(response);
+// res will be http response obj
+const res = await authServerCB.run(callGoogle = async () => {
+  return new Promise( (resolve, reject) => {
+    http.get({
+      host: "www.google.com"
+    }, (res) => {
+      return resolve(res)
+    })
+  })
 })
+

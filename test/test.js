@@ -1,7 +1,7 @@
 var assert = require("assert")
 var expect = require("chai").expect
 var should = require("chai").should
-
+var http = require("http")
 var SimpleCircuitBreaker = require('../index')
 
 const RETRY = 3;
@@ -97,3 +97,33 @@ describe('Circuit', function () {
 
   });
 });
+
+describe('Response', function () {
+  describe('Call Google', function() {
+    const circuit = new SimpleCircuitBreaker({
+      retry: RETRY,
+      halfopenTime: HALFOPENTIMEOUT
+    });
+
+    it('Get google.com', async function () {
+      const res = await circuit.run(callGoogle = async () => {
+        return new Promise( (resolve, reject) => {
+          http.get({
+            host: "www.google.com"
+          }, (res) => {
+            var body = '';
+            res.on('data', function(chunk) {
+              body += chunk;
+            });
+            res.on('end', function() {
+              return resolve(body)
+            });
+          }).on('error', function(e) {
+            return reject(e)
+          });
+        })
+      })
+      expect(res).to.not.be.null;
+    })
+  })
+})
